@@ -7,31 +7,40 @@ import { generateClient } from "aws-amplify/data";
 const client = generateClient<Schema>();
 
 function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const [hoges, setHoges] = useState<Array<Schema["Hoge"]["type"]>>([]);
 
   useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
+    client.models.Hoge.observeQuery().subscribe({
+      next: (data) => setHoges([...data.items]),
     });
   }, []);
 
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
+  function createHoge() {
+    client.models.Hoge.create({ HogeContent: window.prompt("Hoge content") });
   }
 
+  const formFields = {
+    signUp: {
+      "custom:tenant_id": {
+        label: 'Hoge Tenant',
+        order: 1
+      }
+    }
+  };
+
   return (
-    <Authenticator>
+    <Authenticator formFields={formFields}>
       {({ signOut }) => (
         <main>
-          <h1>My todos</h1>
-          <button onClick={createTodo}>+ new</button>
+          <h1>My Hoges</h1>
+          <button onClick={createHoge}>+ new</button>
           <ul>
-            {todos.map((todo) => (
-              <li key={todo.id}>{todo.content}</li>
+            {hoges.map((hoge) => (
+              <li key={hoge.id}>{hoge.HogeContent}</li>
             ))}
           </ul>
           <div>
-            🥳 App successfully hosted. Try creating a new todo.
+            🥳 App successfully hosted. Try creating a new Hoge.
             <br />
             <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
               Review next step of this tutorial.
